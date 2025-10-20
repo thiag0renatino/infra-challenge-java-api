@@ -41,11 +41,12 @@ infra-challenge-java-api/
 
 ```mermaid
 graph TD
-    A[Usuário / Swagger] -->|HTTP| B[Azure App Service (Java 17)]
-    B -->|JDBC| C[(Azure SQL Database)]
-    C --> D[Armazenamento e Dados]
-    B --> E[Azure Logs / Monitor]
-    E --> F[Portal Azure / Log Stream]
+  A["Usuário / Swagger"] -->|HTTP| B["Azure App Service (Java 17)"]
+  B -->|JDBC| C["Azure SQL Database"]
+  C --> D["Armazenamento e Dados"]
+  B --> E["Azure Monitor / Logs"]
+  E --> F["Portal Azure / Log Stream"]
+
 ```
 
 - **Backend Java Spring Boot (App Service)**  
@@ -78,7 +79,7 @@ graph TD
 Cria o grupo de recursos, servidor SQL, banco e App Service:
 
 ```bash
-  ./scripts/azure-create-resources.sh
+./scripts/azure-create-resources.sh
 ```
 
 Este script executa automaticamente:
@@ -94,7 +95,7 @@ Este script executa automaticamente:
 ### 3️⃣ Configurar o Banco
 
 ```bash
-  ./scripts/azure-configure-db.sh
+./scripts/azure-configure-db.sh
 ```
 
 Responsável por executar os scripts SQL (Migrations) diretamente no Azure SQL.
@@ -104,7 +105,7 @@ Responsável por executar os scripts SQL (Migrations) diretamente no Azure SQL.
 ### 4️⃣ Realizar o Deploy da API
 
 ```bash
-  ./scripts/azure-deploy-app.sh
+./scripts/azure-deploy-app.sh
 ```
 
 Publica a aplicação Java no **App Service** e aplica as configurações do `application-azure.properties`.
@@ -116,7 +117,7 @@ Publica a aplicação Java no **App Service** e aplica as configurações do `ap
 Para evitar custos após os testes:
 
 ```bash
-  ./scripts/azure-cleanup.sh
+./scripts/azure-cleanup.sh
 ```
 
 Remove o grupo de recursos e todos os componentes criados.
