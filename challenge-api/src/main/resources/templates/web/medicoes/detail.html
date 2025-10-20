@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{fragments/_layout :: body(~{::section}, ~{::title})}">
+<head><title>Detalhe da Medição</title></head>
+<body>
+<section class="container-narrow">
+    <h2 class="text-success">Detalhes da Medição</h2>
+
+    <div th:if="${msg}" class="alert alert-success" th:text="${msg}"></div>
+    <div th:if="${msgErro}" class="alert alert-danger" th:text="${msgErro}"></div>
+
+    <dl class="row">
+        <dt class="col-sm-3">ID</dt>
+        <dd class="col-sm-9" th:text="${medicao.idMedicao}">1</dd>
+
+        <dt class="col-sm-3">Distância (m)</dt>
+        <dd class="col-sm-9" th:text="${#numbers.formatDecimal(medicao.distanciaM, 1, 'COMMA', 2, 'POINT')}">3,50</dd>
+
+        <dt class="col-sm-3">Posição (ID)</dt>
+        <dd class="col-sm-9" th:text="${medicao.idPosicao}">10</dd>
+
+        <dt class="col-sm-3">Marcador Fixo (ID)</dt>
+        <dd class="col-sm-9" th:text="${medicao.idMarcadorFixo}">5</dd>
+    </dl>
+
+    <div class="d-flex gap-2">
+        <a th:href="@{/web/medicoes}" class="btn btn-outline-secondary">Voltar</a>
+    </div>
+</section>
+</body>
+</html>

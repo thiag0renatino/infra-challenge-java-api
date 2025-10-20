@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{fragments/_layout :: body(~{::section}, ~{::title})}">
+<head>
+    <title>Moto da Posição</title>
+</head>
+<body>
+<section class="container-narrow">
+    <h2 class="text-success">Moto da Posição <span th:text="${posicaoId}">0</span></h2>
+    <dl class="row">
+        <dt class="col-sm-3">ID da Moto</dt><dd class="col-sm-9" th:text="${moto.idMoto}">1</dd>
+        <dt class="col-sm-3">Placa</dt><dd class="col-sm-9" th:text="${moto.placa}">ABC-1234</dd>
+        <dt class="col-sm-3">Modelo</dt><dd class="col-sm-9" th:text="${moto.modelo}">Mottu POP</dd>
+        <dt class="col-sm-3">Status</dt><dd class="col-sm-9" th:text="${moto.status}">Pronta</dd>
+        <dt class="col-sm-3">Cadastro</dt>
+        <dd class="col-sm-9" th:text="${moto.dataCadastro != null ? #temporals.format(moto.dataCadastro,'dd/MM/yyyy') : '-'}">01/01/2025</dd>
+    </dl>
+    <div class="d-flex gap-2">
+        <a th:href="@{'/web/motos/' + ${moto.idMoto}}" class="btn btn-outline-success">Ver Moto</a>
+        <a th:href="@{/web/posicoes}" class="btn btn-outline-secondary">Voltar</a>
+    </div>
+</section>
+</body>
+</html>

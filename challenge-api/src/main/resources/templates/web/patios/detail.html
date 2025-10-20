@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{fragments/_layout :: body(~{::section}, ~{::title})}">
+<head><title>Detalhe do Pátio</title></head>
+<body>
+<section class="container-narrow">
+    <h2 class="text-success">Detalhes do Pátio</h2>
+    <dl class="row">
+        <dt class="col-sm-3">ID</dt>         <dd class="col-sm-9" th:text="${patio.idPatio}">1</dd>
+        <dt class="col-sm-3">Nome</dt>       <dd class="col-sm-9" th:text="${patio.nome}">Pátio Central</dd>
+        <dt class="col-sm-3">Descrição</dt>  <dd class="col-sm-9" th:text="${patio.descricao}">Principal</dd>
+        <dt class="col-sm-3">Localização</dt><dd class="col-sm-9" th:text="${patio.localizacao}">SP - Mooca</dd>
+    </dl>
+    <div class="d-flex gap-2">
+        <a th:href="@{'/web/patios/' + ${patio.idPatio} + '/edit'}" class="btn btn-success">Editar</a>
+        <a th:href="${from} == 'me' ? @{/web/usuarios/me} : @{/web/patios}" class="btn btn-outline-secondary">Voltar</a>
+    </div>
+    <div class="mt-3">
+        <a th:href="@{|/web/patios/${patio.idPatio}/motos|}" class="btn btn-outline-success">
+            Ver motos com histórico neste pátio
+        </a>
+    </div>
+
+</section>
+</body>
+</html>

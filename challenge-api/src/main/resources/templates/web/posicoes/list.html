@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{fragments/_layout :: body(~{::section}, ~{::title})}">
+<head>
+    <title>Posições</title></head>
+<body>
+<section>
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2 class="mb-0">Posições</h2>
+        <div class="d-flex flex-wrap gap-2 mb-3">
+            <!--            <a class="btn btn-outline-primary btn-sm" th:href="@{/web/posicoes/ultimas}">-->
+            <!--                Últimas 10-->
+            <!--            </a>-->
+            <!--            <a class="btn btn-outline-warning btn-sm" th:href="@{/web/posicoes/revisao}">-->
+            <!--                Em Revisão-->
+            <!--            </a>-->
+
+            <!-- Abrir por Moto (todas as posições da moto) -->
+            <form class="d-flex align-items-center gap-2" onsubmit="return getPosicoesPorMoto()">
+                <label class="form-label mb-0">Moto ID</label>
+                <input id="motoIdFiltro" type="number" min="1" step="1" class="form-control form-control-sm"
+                       placeholder="Ex.: 5" style="width: 120px;">
+                <button class="btn btn-outline-success btn-sm" type="submit">Ver Posições da Moto</button>
+            </form>
+
+            <!-- Histórico da Moto (ordem DESC) -->
+            <form class="d-flex align-items-center gap-2" onsubmit="return getHistoricoMoto()">
+                <label class="form-label mb-0">Histórico Moto ID</label>
+                <input id="motoIdHist" type="number" min="1" step="1" class="form-control form-control-sm"
+                       placeholder="Ex.: 5" style="width: 120px;">
+                <button class="btn btn-outline-success btn-sm" type="submit">Ver Histórico</button>
+            </form>
+        </div>
+
+        <script>
+            function getPosicoesPorMoto() {
+              const id = document.getElementById('motoIdFiltro').value;
+              if (!id) return false;
+              window.location.href = '/web/posicoes/moto/' + encodeURIComponent(id);
+              return false;
+            }
+            function getHistoricoMoto() {
+              const id = document.getElementById('motoIdHist').value;
+              if (!id) return false;
+              window.location.href = '/web/posicoes/historico/' + encodeURIComponent(id);
+              return false;
+            }
+        </script>
+
+        <a th:href="@{/web/posicoes/new}" class="btn btn-success">Nova Posição</a>
+    </div>
+
+    <div th:if="${msg}" class="alert alert-success" th:text="${msg}"></div>
+    <div th:if="${msgErro}" class="alert alert-danger" th:text="${msgErro}"></div>
+
+    <div class="table-responsive">
+        <table class="table table-striped align-middle">
+            <thead>
+            <tr>
+                <th>
+                    <a th:href="@{|/web/posicoes?page=0&size=${size}&sort=idPosicao&dir=${dir == 'ASC' ? 'DESC' : 'ASC'}|}">
+                        ID
+                    </a>
+                </th>
+                <th>
+                    Moto
+                </th>
+                <th>
+                    Pátio
+                </th>
+                <th>
+                    <a th:href="@{|/web/posicoes?page=0&size=${size}&sort=xPos&dir=${dir == 'ASC' ? 'DESC' : 'ASC'}|}">
+                        X
+                    </a>
+                </th>
+                <th>
+                    <a th:href="@{|/web/posicoes?page=0&size=${size}&sort=yPos&dir=${dir == 'ASC' ? 'DESC' : 'ASC'}|}">
+                        Y
+                    </a>
+                </th>
+                <th>
+                    <a th:href="@{|/web/posicoes?page=0&size=${size}&sort=dataHora&dir=${dir == 'ASC' ? 'DESC' : 'ASC'}|}">
+                        Data/Hora
+                    </a>
+                </th>
+                <th class="text-end">Ações</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="p : ${posicoes}"
+                th:with="idMotoVal=${p.moto != null ? p.moto.idMoto : p.idMoto},
+                nomeMotoVal=${p.moto != null ? p.moto.modelo : 'Sem nome'},
+                idPatioVal=${p.patio != null ? p.patio.idPatio : p.idPatio},
+                nomePatioVal=${p.patio != null ? p.patio.nome : 'Sem nome'}">
+                <td th:text="${p.idPosicao}">1</td>
+
+                <td>
+                    <a th:if="${idMotoVal != null}"
+                       th:href="@{'/web/posicoes/moto/' + ${idMotoVal}}">
+                        <span th:text="${idMotoVal}"></span> -
+                        <span th:text="${nomeMotoVal}"></span>
+                    </a>
+                    <span th:unless="${idMotoVal != null}" class="text-muted">-</span>
+                </td>
+
+                <td>
+                    <span th:text="${idPatioVal}"></span> -
+                    <span th:text="${nomePatioVal}"></span>
+                    <span th:unless="${idPatioVal != null}" class="text-muted">-</span>
+                </td>
+
+                <td th:text="${p.xPos}">0.0</td>
+                <td th:text="${p.yPos}">0.0</td>
+                <td th:text="${p.dataHora != null ? #temporals.format(p.dataHora,'dd/MM/yyyy HH:mm') : '-'}">
+                    01/01/2025 10:00
+                </td>
+
+                <td class="text-end">
+                    <a class="btn btn-sm btn-outline-success"
+                       th:href="@{'/web/posicoes/' + ${p.idPosicao} + '/moto'}">Moto</a>
+                    <a class="btn btn-sm btn-outline-secondary"
+                       th:href="@{'/web/posicoes/' + ${p.idPosicao}}">Detalhes</a>
+                    <a class="btn btn-sm btn-outline-primary"
+                       th:href="@{'/web/posicoes/' + ${p.idPosicao} + '/edit'}">Editar</a>
+                    <form th:action="@{'/web/posicoes/' + ${p.idPosicao} + '/delete'}" method="post" class="d-inline">
+                        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+                        <button class="btn btn-sm btn-outline-danger"
+                                onclick="return confirm('Confirma exclusão?')">Excluir
+                        </button>
+                    </form>
+                </td>
+            </tr>
+
+            <tr th:if="${#lists.isEmpty(posicoes)}">
+                <td colspan="7" class="text-center text-muted">Nenhuma posição registrada.</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <nav th:if="${page != null and page.totalPages > 1}" aria-label="Paginação">
+        <ul class="pagination">
+            <!-- anterior -->
+            <li class="page-item" th:classappend="${page.first} ? 'disabled'">
+                <a class="page-link"
+                   th:href="@{|/web/posicoes?page=${page.number - 1}&size=${size}&sort=${sort}&dir=${dir}|}">&laquo;</a>
+            </li>
+
+            <!-- números -->
+            <li class="page-item"
+                th:each="i : ${pageNumbers}"
+                th:classappend="${i} == ${page.number} ? 'active'">
+                <a class="page-link"
+                   th:text="${i + 1}"
+                   th:href="@{|/web/posicoes?page=${i}&size=${size}&sort=${sort}&dir=${dir}|}">1</a>
+            </li>
+
+            <!-- próximo -->
+            <li class="page-item" th:classappend="${page.last} ? 'disabled'">
+                <a class="page-link"
+                   th:href="@{|/web/posicoes?page=${page.number + 1}&size=${size}&sort=${sort}&dir=${dir}|}">&raquo;</a>
+            </li>
+        </ul>
+
+        <div class="small text-muted">
+            Página <span th:text="${page.number + 1}">1</span>
+            de <span th:text="${page.totalPages}">1</span> •
+            <span th:text="${page.totalElements}">0</span> itens
+        </div>
+    </nav>
+</section>
+</body>
+</html>

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{fragments/_layout :: body(~{::section}, ~{::title})}">
+<head>
+    <title>Detalhe da Posição</title>
+</head>
+<body>
+<section th:with="
+    isResp = ${posicao instanceof T(com.fiap.challenge_api.dto.PosicaoResponseDTO)},
+    motoId = ${isResp} ? (${posicao.moto} != null ? ${posicao.moto.idMoto} : null) : ${posicao.idMoto},
+    patioId = ${isResp} ? (${posicao.patio} != null ? ${posicao.patio.idPatio} : null) : ${posicao.idPatio}
+">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2 class="mb-0">Posição <span th:text="${posicao.idPosicao}">1</span></h2>
+        <a th:href="@{/web/posicoes}" class="btn btn-outline-secondary">Voltar</a>
+    </div>
+
+    <dl class="row">
+        <dt class="col-sm-3">ID</dt>
+        <dd class="col-sm-9" th:text="${posicao.idPosicao}">1</dd>
+
+        <dt class="col-sm-3">Moto</dt>
+        <dd class="col-sm-9">
+            <a th:if="${motoId != null}" th:href="@{'/web/motos/' + ${motoId}}" th:text="${motoId}">1</a>
+            <span th:if="${motoId == null}" class="text-muted">-</span>
+        </dd>
+
+        <dt class="col-sm-3">Pátio</dt>
+        <dd class="col-sm-9">
+            <a th:if="${patioId != null}" th:href="@{'/web/patios/' + ${patioId}}" th:text="${patioId}">1</a>
+            <span th:if="${patioId == null}" class="text-muted">-</span>
+        </dd>
+
+        <dt class="col-sm-3">X</dt>
+        <dd class="col-sm-9" th:text="${posicao.xPos}">0.0</dd>
+
+        <dt class="col-sm-3">Y</dt>
+        <dd class="col-sm-9" th:text="${posicao.yPos}">0.0</dd>
+
+        <dt class="col-sm-3">Data/Hora</dt>
+        <dd class="col-sm-9"
+            th:text="${posicao.dataHora != null ? #temporals.format(posicao.dataHora,'dd/MM/yyyy HH:mm') : '-'}">
+            01/01/2025 10:00
+        </dd>
+    </dl>
+</section>
+</body>
+</html>

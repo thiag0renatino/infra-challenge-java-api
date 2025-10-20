@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{fragments/_layout :: body(~{::section}, ~{::title})}">
+<head>
+    <title th:text="${mode == 'edit' ? 'Editar Pátio' : 'Novo Pátio'}">Pátio</title>
+</head>
+<body>
+<section class="container-narrow">
+    <h2 th:text="${mode == 'edit' ? 'Editar Pátio' : 'Novo Pátio'}">Pátio</h2>
+
+    <form th:action="${mode == 'edit'} ? @{'/web/patios/' + ${form.idPatio}} : @{/web/patios}"
+          method="post" th:object="${form}" class="mt-3">
+        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+
+        <div class="mb-3" th:if="${mode == 'edit'}">
+            <label class="form-label">ID</label>
+            <input class="form-control" type="text" th:value="*{idPatio}" disabled>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Nome</label>
+            <input class="form-control" type="text" th:field="*{nome}" required maxlength="80">
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Descrição</label>
+            <input class="form-control" type="text" th:field="*{descricao}" maxlength="120">
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Localização</label>
+            <input class="form-control" type="text" th:field="*{localizacao}" maxlength="120"
+                   placeholder="Endereço, bairro, cidade/UF">
+        </div>
+
+        <div class="d-flex gap-2">
+            <button class="btn btn-success" type="submit"
+                    th:text="${mode == 'edit' ? 'Salvar' : 'Registrar'}">Salvar</button>
+            <a th:href="@{/web/patios}" class="btn btn-outline-secondary">Voltar</a>
+        </div>
+    </form>
+</section>
+</body>
+</html>

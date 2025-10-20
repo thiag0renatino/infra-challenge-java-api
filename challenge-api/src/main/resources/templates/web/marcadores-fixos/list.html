@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{fragments/_layout :: body(~{::section}, ~{::title})}">
+<head><title>Marcadores Fixos</title></head>
+<body>
+<section>
+    <div class="d-flex flex-wrap justify-content-between align-items-center mb-3 gap-2">
+        <h2 class="mb-0">Marcadores Fixos</h2>
+        <div class="d-flex gap-2">
+            <form class="d-flex gap-2" th:action="@{/web/marcadores-fixos/buscar}" method="get">
+                <input class="form-control" name="codigoAruco" placeholder="Ex.: ARUCO_001" required>
+                <button class="btn btn-outline-success" type="submit">Buscar</button>
+            </form>
+            <a th:href="@{/web/marcadores-fixos/new}" class="btn btn-success">Novo Marcador</a>
+        </div>
+    </div>
+
+    <div th:if="${msg}" class="alert alert-success" th:text="${msg}"></div>
+    <div th:if="${msgErro}" class="alert alert-danger" th:text="${msgErro}"></div>
+
+    <div class="table-responsive">
+        <table class="table table-striped align-middle">
+            <thead>
+            <tr>
+                <th>
+                    <a th:href="@{|/web/marcadores-fixos?page=0&size=${size}&sort=idMarcadorArucoFixo&dir=${dir == 'ASC' ? 'DESC' : 'ASC'}|}">
+                        ID
+                    </a>
+                </th>
+                <th>
+                    <a th:href="@{|/web/marcadores-fixos?page=0&size=${size}&sort=codigoAruco&dir=${dir == 'ASC' ? 'DESC' : 'ASC'}|}">
+                        Código ArUco
+                    </a>
+                </th>
+                <th>
+                    <a th:href="@{|/web/marcadores-fixos?page=0&size=${size}&sort=xPos&dir=${dir == 'ASC' ? 'DESC' : 'ASC'}|}">
+                        X
+                    </a>
+                </th>
+                <th>
+                    <a th:href="@{|/web/marcadores-fixos?page=0&size=${size}&sort=yPos&dir=${dir == 'ASC' ? 'DESC' : 'ASC'}|}">
+                        Y
+                    </a>
+                </th>
+                <th>Pátio (ID)</th>
+                <th class="text-end">Ações</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="m : ${marcadores}">
+                <td th:text="${m.idMarcadorArucoFixo}">1</td>
+                <td>
+                    <a th:href="@{'/web/marcadores-fixos/' + ${m.idMarcadorArucoFixo}}"
+                       th:text="${m.codigoAruco}">ARUCO_001</a>
+                </td>
+                <td th:text="${m.xPos}">10.5</td>
+                <td th:text="${m.yPos}">7.25</td>
+                <td>
+                    <span th:if="${m.patio != null}"
+                           th:text="|${m.patio.idPatio} — ${m.patio.nome}|">1 — Pátio Central</span>
+                    <span th:unless="${m.patio != null}" class="text-muted">-</span>
+                </td>
+                <td class="text-end">
+                    <form th:action="@{'/web/marcadores-fixos/' + ${m.idMarcadorArucoFixo} + '/delete'}" method="post" class="d-inline">
+                        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+                        <button class="btn btn-sm btn-outline-danger"
+                                onclick="return confirm('Confirma exclusão?')">Excluir</button>
+                    </form>
+                </td>
+            </tr>
+            <tr th:if="${#lists.isEmpty(marcadores)}">
+                <td colspan="6" class="text-center text-muted">Nenhum marcador fixo cadastrado.</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <nav th:if="${page != null and page.totalPages > 1}" aria-label="Paginação">
+        <ul class="pagination">
+            <!-- anterior -->
+            <li class="page-item" th:classappend="${page.first} ? 'disabled'">
+                <a class="page-link"
+                   th:href="@{|/web/marcadores-fixos?page=${page.number - 1}&size=${size}&sort=${sort}&dir=${dir}|}">&laquo;</a>
+            </li>
+
+            <!-- números -->
+            <li class="page-item"
+                th:each="i : ${pageNumbers}"
+                th:classappend="${i} == ${page.number} ? 'active'">
+                <a class="page-link"
+                   th:text="${i + 1}"
+                   th:href="@{|/web/marcadores-fixos?page=${i}&size=${size}&sort=${sort}&dir=${dir}|}">1</a>
+            </li>
+
+            <!-- próximo -->
+            <li class="page-item" th:classappend="${page.last} ? 'disabled'">
+                <a class="page-link"
+                   th:href="@{|/web/marcadores-fixos?page=${page.number + 1}&size=${size}&sort=${sort}&dir=${dir}|}">&raquo;</a>
+            </li>
+        </ul>
+
+        <div class="small text-muted">
+            Página <span th:text="${page.number + 1}">1</span>
+            de <span th:text="${page.totalPages}">1</span> •
+            <span th:text="${page.totalElements}">0</span> itens
+        </div>
+    </nav>
+</section>
+</body>
+</html>

@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{fragments/_layout :: body(~{::section}, ~{::title})}">
+<head>
+    <title th:text="'Motos do Pátio #' + ${patio.idPatio}">Motos por Pátio</title>
+</head>
+<body>
+<section>
+
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <div>
+            <h2 class="mb-0">
+                <span th:text="'Pátio: ' + ${patio.nome}">Pátio X</span>
+            </h2>
+            <small class="text-muted">
+                <span th:text="'Endereço: ' + ${patio.localizacao}">Endereço</span>
+                &middot;
+                <span th:text="'ID: ' + ${patio.idPatio}">ID</span>
+            </small>
+        </div>
+
+        <div class="d-flex gap-2">
+            <a th:href="@{/web/patios}" class="btn btn-success">Voltar</a>
+        </div>
+    </div>
+
+    <div th:if="${msg}" class="alert alert-success" th:text="${msg}"></div>
+    <div th:if="${msgErro}" class="alert alert-danger" th:text="${msgErro}"></div>
+
+    <div th:if="${#lists.isEmpty(motos)}" class="alert alert-warning">
+        Nenhuma moto com histórico de passagem neste pátio.
+    </div>
+
+    <div th:if="${!#lists.isEmpty(motos)}" class="table-responsive">
+        <table class="table table-striped align-middle">
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>Placa</th>
+                <th>Modelo</th>
+                <th>Status</th>
+                <th>Data Cadastro</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="moto : ${motos}">
+                <td th:text="${moto.idMoto}">1</td>
+                <td th:text="${moto.placa}">ABC-1234</td>
+                <td th:text="${moto.modelo}">Modelo</td>
+                <td>
+                    <span class="badge bg-primary" th:text="${moto.status}">ATIVA</span>
+                </td>
+                <td th:text="${#temporals.format(moto.dataCadastro, 'dd/MM/yyyy')}">01/01/2025</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+</section>
+</body>
+</html>

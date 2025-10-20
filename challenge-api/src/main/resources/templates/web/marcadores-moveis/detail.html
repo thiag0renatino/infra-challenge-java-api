@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{fragments/_layout :: body(~{::section}, ~{::title})}">
+<head><title>Detalhe do Marcador Móvel</title></head>
+<body>
+<section class="container-narrow">
+    <h2 class="text-success">Detalhes do Marcador Móvel</h2>
+
+    <div th:if="${msg}" class="alert alert-success" th:text="${msg}"></div>
+    <div th:if="${msgErro}" class="alert alert-danger" th:text="${msgErro}"></div>
+
+    <dl class="row">
+        <dt class="col-sm-3">ID</dt>
+        <dd class="col-sm-9" th:text="${marcador.idMarcadorMovel}">1</dd>
+
+        <dt class="col-sm-3">Código ArUco</dt>
+        <dd class="col-sm-9" th:text="${marcador.codigoAruco}">ARUCO_MOV_001</dd>
+
+        <dt class="col-sm-3">Data de Instalação</dt>
+        <dd class="col-sm-9" th:text="${#temporals.format(marcador.dataInstalacao, 'dd/MM/yyyy')}">01/09/2025</dd>
+
+        <dt class="col-sm-3">Moto</dt>
+        <dd class="col-sm-9">
+            <span th:if="${marcador.moto != null}">
+                <strong>ID </strong><span th:text="${marcador.moto.idMoto}">100</span>
+                <span th:if="${marcador.moto.modelo != null}"> — <span th:text="${marcador.moto.modelo}">Modelo X</span></span>
+            </span>
+            <span th:if="${marcador.moto == null}" class="text-muted">-</span>
+        </dd>
+    </dl>
+
+    <div class="d-flex gap-2">
+        <a th:href="@{/web/marcadores-moveis}" class="btn btn-outline-secondary">Voltar</a>
+        <a class="btn btn-outline-success" th:href="@{'/web/marcadores-moveis/' + ${marcador.idMarcadorMovel} + '/edit'}">Editar</a>
+    </div>
+</section>
+</body>
+</html>

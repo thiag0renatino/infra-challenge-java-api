@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{fragments/_layout :: body(~{::section}, ~{::title})}">
+<head>
+    <title>Posições</title>
+</head>
+<body>
+<section>
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2 class="mb-0" th:text="${filtro != null ? filtro : 'Posições'}">Posições</h2>
+        <a th:href="@{/web/posicoes}" class="btn btn-outline-secondary">Voltar</a>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table table-striped align-middle">
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>Moto</th>
+                <th>Pátio</th>
+                <th>X</th>
+                <th>Y</th>
+                <th>Data/Hora</th>
+                <th class="text-end">Ações</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="p : ${posicoes}"
+                th:with="
+                  isResp = ${p instanceof T(com.fiap.challenge_api.dto.PosicaoResponseDTO)},
+                  motoId = ${isResp} ? (${p.moto} != null ? ${p.moto.idMoto} : null) : ${p.idMoto},
+                  patioId = ${isResp} ? (${p.patio} != null ? ${p.patio.idPatio} : null) : ${p.idPatio}
+                ">
+                <td th:text="${p.idPosicao}">1</td>
+
+                <!-- Moto -->
+                <td>
+                    <a th:if="${motoId != null}"
+                       th:text="${motoId}"
+                       th:href="@{'/web/motos/' + ${motoId}}">1</a>
+                    <span th:if="${motoId == null}" class="text-muted">-</span>
+                </td>
+
+                <!-- Pátio -->
+                <td>
+                    <a th:if="${patioId != null}"
+                       th:text="${patioId}"
+                       th:href="@{'/web/patios/' + ${patioId}}">1</a>
+                    <span th:if="${patioId == null}" class="text-muted">-</span>
+                </td>
+
+                <td th:text="${p.xPos}">0.0</td>
+                <td th:text="${p.yPos}">0.0</td>
+                <td th:text="${p.dataHora != null ? #temporals.format(p.dataHora,'dd/MM/yyyy HH:mm') : '-'}">
+                    01/01/2025 10:00
+                </td>
+
+                <td class="text-end">
+                    <a class="btn btn-sm btn-outline-secondary"
+                       th:href="@{'/web/posicoes/' + ${p.idPosicao}}">Detalhes</a>
+                    <a class="btn btn-sm btn-outline-primary"
+                       th:href="@{'/web/posicoes/' + ${p.idPosicao} + '/edit'}">Editar</a>
+                </td>
+            </tr>
+
+            <tr th:if="${#lists.isEmpty(posicoes)}">
+                <td colspan="7" class="text-center text-muted">Sem registros.</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</section>
+</body>
+</html>

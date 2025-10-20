@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{fragments/_layout :: body(~{::section}, ~{::title})}">
+<head>
+    <title>Minha Conta</title>
+</head>
+<body>
+<section>
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2 class="mb-0">Minha Conta</h2>
+        <a th:href="@{/web}" class="btn btn-outline-success">Voltar</a>
+    </div>
+
+    <div th:if="${msg}" class="alert alert-success" th:text="${msg}"></div>
+    <div th:if="${erro}" class="alert alert-danger" th:text="${erro}"></div>
+
+    <dl class="row">
+        <dt class="col-sm-3">Nome</dt>
+        <dd class="col-sm-9" th:text="${usuario.nome}">-</dd>
+
+        <dt class="col-sm-3">E-mail</dt>
+        <dd class="col-sm-9" th:text="${usuario.email}">-</dd>
+
+        <dt class="col-sm-3">Status</dt>
+        <dd class="col-sm-9">
+            <span th:text="${usuario.status}">ativo</span>
+        </dd>
+
+        <dt class="col-sm-3">Pátio</dt>
+        <dd class="col-sm-9">
+      <span th:if="${usuario.patioId != null}">
+        <a th:if="${usuario.patioId != null}"
+           th:href="@{/web/patios/{id}(id=${usuario.patioId}, from='me')}"
+           th:text="${usuario.patioId}">
+        </a>
+
+      </span>
+            <span th:if="${usuario.patioId == null}" class="text-muted">—</span>
+        </dd>
+    </dl>
+
+    <a th:href="@{/web/usuarios/alterar-senha}" class="btn btn-success">
+        Alterar senha
+    </a>
+</section>
+</body>
+</html>

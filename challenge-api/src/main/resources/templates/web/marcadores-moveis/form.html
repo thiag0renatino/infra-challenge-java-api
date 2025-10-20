@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{fragments/_layout :: body(~{::section}, ~{::title})}">
+<head>
+    <title th:text="${mode == 'edit' ? 'Editar Marcador Móvel' : 'Novo Marcador Móvel'}">Marcador Móvel</title>
+</head>
+<body>
+<section class="container-narrow">
+    <h2 th:text="${mode == 'edit' ? 'Editar Marcador Móvel' : 'Novo Marcador Móvel'}">Marcador Móvel</h2>
+
+    <form th:action="${mode == 'edit' and form.idMarcadorMovel != null} ?
+                      @{'/web/marcadores-moveis/' + ${form.idMarcadorMovel}} :
+                      @{/web/marcadores-moveis}"
+          method="post" th:object="${form}" class="mt-3">
+        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+
+        <div th:if="${mode == 'edit'}" class="mb-2">
+            <small class="text-muted">ID: <span th:text="*{idMarcadorMovel}">1</span></small>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Código ArUco</label>
+            <input class="form-control" type="text" th:field="*{codigoAruco}" required maxlength="60"
+                   placeholder="Ex.: MOVEL_001">
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">ID da Moto</label>
+            <input class="form-control" type="number" min="1" step="1" th:field="*{idMoto}" placeholder="Ex.: 5">
+        </div>
+
+        <div class="d-flex gap-2">
+            <button class="btn btn-success" type="submit"
+                    th:text="${mode == 'edit' ? 'Salvar alterações' : 'Cadastrar'}">Salvar
+            </button>
+            <a th:href="@{/web/marcadores-moveis}" class="btn btn-outline-secondary">Voltar</a>
+        </div>
+    </form>
+</section>
+</body>
+</html>

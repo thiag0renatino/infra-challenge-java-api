@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{fragments/_layout :: body(~{::section}, ~{::title})}">
+<head><title>Marcadores por Pátio</title></head>
+<body>
+<section>
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2 class="mb-0" th:text="${filtro != null ? filtro : 'Marcadores Fixos'}">Marcadores Fixos</h2>
+        <div class="d-flex gap-2">
+            <a th:href="${veioDePatios} ? @{/web/patios} : @{/web/marcadores-fixos}"
+               class="btn btn-outline-secondary">Voltar</a>
+            <a th:href="@{/web/marcadores-fixos/new}" class="btn btn-success">Novo Marcador</a>
+        </div>
+    </div>
+
+    <div th:if="${msg}" class="alert alert-success" th:text="${msg}"></div>
+    <div th:if="${msgErro}" class="alert alert-danger" th:text="${msgErro}"></div>
+
+    <div class="table-responsive">
+        <table class="table table-striped align-middle">
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>Código ArUco</th>
+                <th>X</th>
+                <th>Y</th>
+                <th>Pátio (ID)</th>
+                <th class="text-end">Ações</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="m : ${marcadores}">
+                <td th:text="${m.idMarcadorArucoFixo}">1</td>
+                <td>
+                    <a th:href="@{'/web/marcadores-fixos/' + ${m.idMarcadorArucoFixo}}"
+                       th:text="${m.codigoAruco}">23</a>
+                </td>
+                <td th:text="${m.xPos}">10.5</td>
+                <td th:text="${m.yPos}">7.25</td>
+                <td>
+                    <span th:if="${m.patio != null}" th:text="${m.patio.idPatio}">2</span>
+                    <span th:if="${m.patio == null}" class="text-muted">-</span>
+                </td>
+                <td class="text-end">
+                    <form th:action="@{'/web/marcadores-fixos/' + ${m.idMarcadorArucoFixo} + '/delete'}" method="post" class="d-inline">
+                        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+                        <button class="btn btn-sm btn-outline-danger"
+                                onclick="return confirm('Confirma exclusão?')">Excluir</button>
+                    </form>
+                </td>
+            </tr>
+            <tr th:if="${#lists.isEmpty(marcadores)}">
+                <td colspan="6" class="text-center text-muted">Nenhum marcador fixo encontrado para este pátio.</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</section>
+</body>
+</html>
